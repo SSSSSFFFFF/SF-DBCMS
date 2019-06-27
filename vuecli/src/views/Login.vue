@@ -56,16 +56,23 @@
         var that = this;
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            console.log('submit!');
+            console.log('submit!',that.login);
+            axios.post(url,params)
+            .then(res => {
+              console.log(res)
+            })
+            .catch(err => {
+              console.error(err); 
+            })
           } else {
-            console.log('error submit!!');
+            
+            console.log('error submit!!',that.login);
             return false;
           }
         });
       },
       resetForm(formName) {
         this.$refs[formName].resetFields();
-        console.log(this.$refs[formName].resetFields())
       }
     }
   }
