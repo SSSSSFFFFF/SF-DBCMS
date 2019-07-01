@@ -56,10 +56,10 @@
         var that = this;
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            console.log('submit!',that.login);
-            axios.post(url,params)
+            console.log('submit!',host,that.login);
+            that.axios.post(host+ '/login',that.login)
             .then(res => {
-              console.log(res)
+              console.log(res.data)
             })
             .catch(err => {
               console.error(err); 

@@ -1,22 +1,17 @@
-let  jsonWebToken = ()=>{
+
+let jsonWebToken = (userInfo, res) => {
     const jwt = require('jsonwebtoken')
 
-    // Token 数据
-    const payload = {
-        name: 'wanghao',
-        admin: true
-    }
-
     // 密钥
-    const secret = 'ILOVENINGHAO'
+    const secret = 'SfCmsUserInfo'
 
     // 签发 Token
-    const token = jwt.sign(payload, secret, {
+    const token = jwt.sign(userInfo, secret, {
         expiresIn: '1day'
     })
 
     // 输出签发的 Token
-    console.log(token)
+    res.send(token)
 
     // 验证 Token
     jwt.verify(token, secret, (error, decoded) => {
@@ -24,10 +19,16 @@ let  jsonWebToken = ()=>{
             console.log(error.message)
             return
         }
-        console.log(decoded)
+        
     })
 }
 
+let loginApi = (res, req) =>{
+    userInfo = req.body
+    console.log(userInfo)
+    jsonWebToken(req.body,res);
+}
+    
 module.exports ={
-    jsonWebToken,
+    loginApi,
 }
