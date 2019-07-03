@@ -66,3 +66,6 @@ var server = app.listen(port, function () {
     console.log('接口地址' + host + ':' + port + '✅')
     console.log('查看接口文档 https://github.com/SSSSSFFFFF/SF-DBCMS')
 })
+
+let a:number = 4;
+console.log(a)
