@@ -1,5 +1,5 @@
 
-let jsonWebToken = (userInfo, res) => {
+let jsonWebToken = (userInfo:any, res:any) => {
     const jwt = require('jsonwebtoken')
 
     // 密钥
@@ -14,7 +14,7 @@ let jsonWebToken = (userInfo, res) => {
     res.send(token)
 
     // 验证 Token
-    jwt.verify(token, secret, (error, decoded) => {
+    jwt.verify(token, secret, (error: any, decoded: any) => {
         if (error) {
             console.log(error.message)
             return
@@ -23,9 +23,7 @@ let jsonWebToken = (userInfo, res) => {
     })
 }
 
-let loginApi = (res, req) =>{
-    userInfo = req.body
-    console.log(userInfo)
+let loginApi = (res: any, req: any) =>{
     jsonWebToken(req.body,res);
 }
     

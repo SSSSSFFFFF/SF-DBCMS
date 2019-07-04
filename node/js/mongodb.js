@@ -40,7 +40,7 @@ var apis = (db, buf, dbase, col, response, type) => {
     // 添加库，表和数据
     if (type == 'add') {
         // 添加时间
-        buf.data.forEach(element => {
+        buf.data.forEach((element) => {
             element.createTime = new Date();
         });
         dbase.collection(col).insertMany(buf.data, function (err, res) {
