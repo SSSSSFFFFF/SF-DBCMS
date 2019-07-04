@@ -5,7 +5,8 @@ var mongodb:any = require('./mongodb');
 // token登陆验证
 var token = require('./token');
 // 数据库设置在根目录 config.json
-var json = require('../config.json');
+var json = require('../../config.json');
+var admin:any  = require('./admin');
 // 服务器ip
 var host = json.serverHost;
 //端口号
@@ -31,8 +32,8 @@ app.all('*', function (req: any, res:any, next:any) {
 // })
 
 //后台登录信息
-app.post("/login", (req: any, res: any) => {
-    token.loginApi(res, req)
+app.post("/admin", (req: any, res: any) => {
+    admin.adminLogin(req,res)
 })
 
 /********mongodb********* */
@@ -71,6 +72,3 @@ var server = app.listen(port, function () {
     console.log('接口地址' + host + ':' + port + '✅')
     console.log('查看接口文档 https://github.com/SSSSSFFFFF/SF-DBCMS')
 })
-
-let a:number = 4;
-console.log(a)

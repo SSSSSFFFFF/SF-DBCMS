@@ -1,5 +1,5 @@
 /* 创每个接口都要建库和表（有了则不创建）,传递参数和type = api的值 */
-var json = require('../config.json');
+var json = require('../../config.json');
 // mongodb的ip
 var mongoIp = json.mongoIp;
 var dbAuth = json.dbAuth;

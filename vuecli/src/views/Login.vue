@@ -54,10 +54,14 @@
     methods: {
       submitForm(formName) {
         var that = this;
+        const userInfo = {
+          account: that.md5(that.login.account),
+          password: that.md5(that.login.password)
+        }
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            console.log('submit!',host,that.login);
-            that.axios.post(host+ '/login',that.login)
+            console.log('loginInfo',host,userInfo);
+            that.axios.post(host+ '/admin',userInfo)
             .then(res => {
               console.log(res.data)
             })
@@ -65,8 +69,6 @@
               console.error(err); 
             })
           } else {
-            
-            console.log('error submit!!',that.login);
             return false;
           }
         });
