@@ -64,6 +64,24 @@
       }
     },
     mounted(){
+      var that = this;
+      if(!localStorage.getItem("token")){
+        that.$router.replace("/")
+      } else {
+         let datas = {
+          "dataBase": "SFCMS",
+          "collectionName": "adminInfo",
+          "data": {       
+            "name":"sf"
+          },
+          "token": localStorage.getItem("token")
+        }
+      that.axios.post(host + "/query", datas)
+        .then(res => {
+          console.log(res.data[0])
+        })
+      }
+     
     },
     methods: {
       handleOpen(key, keyPath) {
@@ -72,24 +90,6 @@
       handleClose(key, keyPath) {
         console.log(key, keyPath);
       },
-      add() {
-        //whereStr查询条件
-        //updateStr更改的内容
-        var datas = {
-          "dataBase": "SFCMS",
-          "collectionName": "userInfo",
-          "whereStr": {
-            "stars": "4"
-          },
-          "updateStr": {
-            "createTime": "timeChanged"
-          }
-        }
-        this.axios.post(host + "/update", JSON.stringify(datas))
-          .then(res => {
-            console.log(res.data)
-          })
-      }
     }
     
 

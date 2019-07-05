@@ -1,12 +1,17 @@
 "use strict";
+var mongodb = require('./mongodb');
+var token = require('./token');
 function adminLogin(req, res) {
+    // 管理员
     let key = {
         account: "21232f297a57a5a743894a0e4a801fc3",
-        password: "e10adc3949ba59abbe56e057f20f883e"
+        password: "becb8a7748c8d838df5adcf1b37be654"
     };
-    console.log(JSON.stringify(req.body) == JSON.stringify(key));
-    if (req.body == key) {
-        console.log(true);
+    if (JSON.stringify(req.body) == JSON.stringify(key)) {
+        token.loginApi(req.body, res);
+    }
+    else {
+        res.send(false);
     }
 }
 module.exports = {

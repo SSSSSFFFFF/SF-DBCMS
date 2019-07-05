@@ -1,5 +1,7 @@
 /* 创每个接口都要建库和表（有了则不创建）,传递参数和type = api的值 */
 var json = require('../../config.json');
+
+var tokenFunc = require('./token');
 // mongodb的ip
 var mongoIp = json.mongoIp;
 var dbAuth = json.dbAuth;
@@ -12,16 +14,25 @@ var dbAndCol = (req: { body: any; }, res: any, type: any) => {
         let buf = req.body;
         MongoClient.connect(url, {
             useNewUrlParser: true
-        }, function (err: any, db: { db: (arg0: any) => void; }) {
+        }, function (err: any, db:any) {
+                console.log(buf)
             try {
                 if (err)
                     throw err;
                 // 创建数据库
                 let dbase = db.db(buf.dataBase);
                 let col = buf.collectionName;
+                let token = buf.token;
                 console.log('database:' + buf.dataBase + '✅');
                 // 添加表和数据
-                apis(db, buf, dbase, col, res, type);
+                
+                tokenFunc.verifyToken(token)
+                console.log(global.rightToken); 
+                
+                if (token) {
+                    apis(db, buf, dbase, col, res, type);
+                }
+                
             }
             catch (e) {
                 console.error(e);
@@ -137,4 +148,5 @@ var apis = (db: any, buf: any, dbase: any, col: string, response: any, type:any)
 };
 module.exports = {
     dbAndCol,
+    url
 };

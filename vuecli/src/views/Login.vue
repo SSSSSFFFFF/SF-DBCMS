@@ -13,6 +13,8 @@
         <el-button @click="resetForm('login')">重置</el-button>
       </el-form-item>
     </el-form>
+     <el-alert class="errAlert" v-if="alertShow"  title="账号或密码错误" type="error" :closable="closable" show-icon>
+    </el-alert>
   </div>
 </template>
 <script>
@@ -49,7 +51,11 @@
             trigger: 'blur'
           }]
         },
+        closable:false,
+        alertShow:false,
       };
+    },
+    mounted(){
     },
     methods: {
       submitForm(formName) {
@@ -60,10 +66,19 @@
         }
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            console.log('loginInfo',host,userInfo);
+            let loadding = this.$loading()
             that.axios.post(host+ '/admin',userInfo)
             .then(res => {
-              console.log(res.data)
+              if(res.data) {
+                let token = res.data
+                // 存储cookie
+               localStorage.setItem("token", token);
+                that.alertShow = false;  
+                that.$router.replace("home")
+              } else {
+                that.alertShow = true;
+              }
+              loadding.close();
             })
             .catch(err => {
               console.error(err); 
@@ -80,11 +95,16 @@
   }
 </script>
 <style scoped>
-  .loginModel {
+  .loginModel,.errAlert {
     position: absolute;
     left: 50%;
-    top: 50%;
+    top: 46%;
     transform: translate(-50%, -50%);
+    width: 380px;
+  }
+  
+  .errAlert {
+    top: 58%;
     width: 400px;
   }
   .el-form-item {
