@@ -27,6 +27,7 @@ var dbAndCol = (req: { body: any; }, res: any, type: any) => {
                 // 添加表和数据
                 
                 tokenFunc.verifyToken(token)
+                // @ts-ignore
                 console.log(global.rightToken); 
                 
                 if (token) {

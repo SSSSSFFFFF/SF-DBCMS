@@ -26,6 +26,7 @@ var dbAndCol = (req, res, type) => {
                 console.log('database:' + buf.dataBase + '✅');
                 // 添加表和数据
                 tokenFunc.verifyToken(token);
+                // @ts-ignore
                 console.log(global.rightToken);
                 if (token) {
                     apis(db, buf, dbase, col, res, type);

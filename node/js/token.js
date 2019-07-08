@@ -18,10 +18,15 @@ function verifyToken(token) {
             return;
         }
         else {
-            console.log(decoded);
             let nowTime = (new Date()).getTime().toString().substring(0, 10);
+            console.log(decoded, nowTime);
             if (decoded.exp > nowTime && decoded.iat < nowTime) {
+                // @ts-ignore
                 global.rightToken = true;
+            }
+            else {
+                // @ts-ignore
+                global.rightToken = false;
             }
         }
     });
