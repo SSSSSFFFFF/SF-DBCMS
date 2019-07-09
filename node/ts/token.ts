@@ -22,7 +22,7 @@ function verifyToken(token:string){
          } else {
              
              let nowTime = (new Date()).getTime().toString().substring(0, 10);
-             console.log(decoded, nowTime)
+            //  console.log(decoded, nowTime)
              if (decoded.exp > nowTime && decoded.iat <nowTime) {
                  // @ts-ignore
                  global.rightToken = true

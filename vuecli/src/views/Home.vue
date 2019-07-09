@@ -1,52 +1,48 @@
 <template>
   <div class="home">
-      <el-menu default-active="2" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose"
-        background-color="#545c64" text-color="#fff" active-text-color="#ffd04b">
-        <el-submenu index="1">
-          <template slot="title">
-            <font-awesome-icon icon="user-secret" />
-            <span>操作数据库</span>
-          </template>
-          <el-menu-item-group>
-            <template slot="title">分组一</template>
-            <el-menu-item index="1-1">选项1</el-menu-item>
-            <el-menu-item index="1-2">选项2</el-menu-item>
-          </el-menu-item-group>
-          <el-menu-item-group title="分组2">
-            <el-menu-item index="1-3">选项3</el-menu-item>
-          </el-menu-item-group>
-          <el-submenu index="1-4">
-            <template slot="title">选项4</template>
-            <el-menu-item index="1-4-1">选项1</el-menu-item>
-          </el-submenu>
-        </el-submenu>
-        <!-- <el-menu-item index="2">
-          <i class="el-icon-menu"></i>
-          <span slot="title">导航二</span>
-        </el-menu-item> -->
-       
-      </el-menu>
+    <el-menu default-active="2" class="leftList el-menu-vertical-demo" @open="handleOpen" @close="handleClose"
+      text-color="white" background-color="#212121" :default-openeds="openeds">
+      <el-submenu index="1">
+        <template slot="title">
+          <i class="fa fa-database" :style="listIconStyle"></i>
+          <span>数据库</span>
+        </template>
+        <el-menu-item index="1-1">管理员</el-menu-item>
+        <el-menu-item index="1-2">选项2</el-menu-item>
+      </el-submenu>
+      <div class="listBottom">
+
+        <div class="signOut">
+          <p class="signOutName">Hi, {{name}} !</p>
+          <img class="headImgCss" :src="headImg" alt="">
+        </div>
+        <span class="signOutButton" @click="signOut">
+          <i class="fa fa-sign-out" aria-hidden="true"></i>
+          Sign Out
+        </span>
+      </div>
+    </el-menu>
+    <div class="rightHeader">
+      <database></database>
+    </div>
   </div>
 </template>
-
-
-
 <script>
   // @ is an alias to /src
-  import HelloWorld from '@/components/HelloWorld.vue'
-
+  import database from '@/components/database.vue'
   export default {
     name: 'home',
     components: {
-      HelloWorld
+      database
     },
     data() {
       return {
         text: "添加一条数据",
-        isCollapse: true,
         name: '',
         headImg: '',
-        zheDieBoolen: false,
+        listIconStyle: "margin-right:15px",
+        openeds: ["1"],
+        currentRow: null
       }
     },
     mounted() {
@@ -64,9 +60,16 @@
           "token": localStorage.getItem("token")
         }
 
-        // 判断缓存是否有用户信息
+        // 判断缓存用户信息是否过期或存在
         if (localStorage.getItem("userInfo")) {
           getUserInfoFromeLocalStorage();
+          that.axios.post(host + "/query", datas)
+            .then(res => {
+              if (JSON.stringify(res.data[0]) != localStorage.getItem("userInfo")) {
+                localStorage.setItem("userInfo", JSON.stringify(res.data[0]))
+                getUserInfoFromeLocalStorage();
+              }
+            })
         } else {
           that.axios.post(host + "/query", datas)
             .then(res => {
@@ -82,15 +85,20 @@
         }
 
       }
-
     },
     methods: {
+      //退出登录 清除token
+      signOut() {
+        localStorage.removeItem("token")
+        this.$router.replace("/")
+      },
       handleOpen(key, keyPath) {
         console.log(key, keyPath);
       },
       handleClose(key, keyPath) {
         console.log(key, keyPath);
-      },
+      }
+     
     }
 
 
@@ -98,17 +106,81 @@
 </script>
 
 <style scoped>
+  .home {
+    height: 100%;
+    width: 100%;
+  }
+
+  .el-submenu__title i {
+    color: white;
+  }
+
+  .signOutName {
+    width: 50px;
+    word-wrap: break-word;
+  }
+
+  .signOutButton {
+    background: #fff;
+    color: black;
+    padding: 10px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    cursor: pointer;
+  }
+
+  .signOut {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 150px;
+  }
+
+  .headImgCss {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: block;
+    margin-bottom: 20px;
+  }
+
   .el-menu-vertical-demo:not(.el-menu--collapse) {
     width: 200px;
     min-height: 400px;
   }
 
-  .iconRotate {
-    font-size: 30px;
-    line-height: 30px !important;
+  .el-menu-vertical-demo {
+    height: 100vh;
   }
 
-  .el-submenu__title {
-    font-size: 30px !important;
+  .leftList {
+    position: absolute;
+    left: 0;
+    top: 0;
+    border-right: 0;
+  }
+
+  .rightHeader {
+    margin-left: 200px;
+    background-color: #F2F2F2;
+    height: 100%;
+  }
+
+  .listBottom {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    color: white;
+  }
+
+  .fa-sign-out {
+    font-size: 20px;
+  }
+
+  .el-menu-item.is-active {
+    color: white;
+    background: #595959 !important;
   }
 </style>
