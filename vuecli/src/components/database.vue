@@ -6,7 +6,11 @@
             </el-table-column>
             <el-table-column prop="name" label="姓名" width="120">
             </el-table-column>
-            <el-table-column prop="address" label="地址" show-overflow-tooltip>
+            
+            <el-table-column  label="头像" show-overflow-tooltip>
+                <template v-slot="scope">
+                    <img :src="scope.row.headImg" width="40" height="40" class="head_pic"/>
+                </template>
             </el-table-column>
         </el-table>
     </div>
@@ -31,15 +35,12 @@
             let datas = {
                 "dataBase": "SFCMS",
                 "collectionName": "adminInfo",
-                "data": {
-                    "name": "sf"
-                },
                 "token": token
             }
             that.axios.post(host + "/query", datas)
                 .then(res => {
-                    console.log(res.data)
                     that.tableData = res.data;
+                    // console.log(that.tableData)
                 })
         },
         methods: {

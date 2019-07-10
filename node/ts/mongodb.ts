@@ -15,7 +15,7 @@ var dbAndCol = (req: { body: any; }, res: any, type: any) => {
         MongoClient.connect(url, {
             useNewUrlParser: true
         }, function (err: any, db:any) {
-                console.log(buf)
+                // console.log(buf)
             try {
                 if (err)
                     throw err;
@@ -23,12 +23,12 @@ var dbAndCol = (req: { body: any; }, res: any, type: any) => {
                 let dbase = db.db(buf.dataBase);
                 let col = buf.collectionName;
                 let token = buf.token;
-                console.log('database:' + buf.dataBase + '✅');
+                // console.log('database:' + buf.dataBase + '✅');
                 // 添加表和数据
                 
                 tokenFunc.verifyToken(token)
                 // @ts-ignore
-                console.log(global.rightToken); 
+                // console.log(global.rightToken); 
                 
                 if (token) {
                     apis(db, buf, dbase, col, res, type);
