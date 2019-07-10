@@ -1,13 +1,13 @@
 <template>
   <div class="home">
     <el-menu default-active="2" class="leftList el-menu-vertical-demo" @open="handleOpen" @close="handleClose"
-      text-color="white" background-color="#212121" :default-openeds="openeds">
+      @select="handleSelect" text-color="white" background-color="#212121" :default-openeds="openeds">
       <el-submenu index="1">
         <template slot="title">
           <i class="fa fa-database" :style="listIconStyle"></i>
           <span>数据库</span>
         </template>
-        <el-menu-item index="1-1">管理员</el-menu-item>
+        <el-menu-item index="1-1">后台管理员</el-menu-item>
         <el-menu-item index="1-2">选项2</el-menu-item>
       </el-submenu>
       <div class="listBottom">
@@ -23,7 +23,7 @@
       </div>
     </el-menu>
     <div class="rightHeader">
-      <database></database>
+      <database v-if="menuIndex == '1-1'"></database>
     </div>
   </div>
 </template>
@@ -42,7 +42,8 @@
         headImg: '',
         listIconStyle: "margin-right:15px",
         openeds: ["1"],
-        currentRow: null
+        currentRow: null,
+        menuIndex:'',
       }
     },
     mounted() {
@@ -97,8 +98,10 @@
       },
       handleClose(key, keyPath) {
         console.log(key, keyPath);
+      },
+      handleSelect(key, keyPath) {
+        this.menuIndex = key
       }
-     
     }
 
 
