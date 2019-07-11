@@ -6,6 +6,9 @@ var mongodb:any = require('./mongodb');
 var token = require('./token');
 // 数据库设置在根目录 config.json
 var json = require('../../config.json');
+// 在 app.js 中加载我们写好的处理文件上传的模块
+var upload = require('./upload');
+
 var admin:any  = require('./admin');
 // 服务器ip
 var host = json.serverHost;
@@ -26,6 +29,8 @@ app.all('*', function (req: any, res:any, next:any) {
 });
 
 
+
+app.use('/upload', upload);
 /* 获取用户登陆token */
 // app.post("/login", (req: any, res: any) => {
 //     token.loginApi(res, req)

@@ -7,7 +7,7 @@
           <i class="fa fa-database" :style="listIconStyle"></i>
           <span>数据库</span>
         </template>
-        <el-menu-item index="1-1">后台管理员</el-menu-item>
+        <el-menu-item index="1-1">用户管理</el-menu-item>
         <el-menu-item index="1-2">选项2</el-menu-item>
       </el-submenu>
       <div class="listBottom">
@@ -16,10 +16,12 @@
           <p class="signOutName">Hi, {{name}} !</p>
           <img class="headImgCss" :src="headImg" alt="">
         </div>
-        <span class="signOutButton" @click="signOut">
-          <i class="fa fa-sign-out" aria-hidden="true"></i>
-          Sign Out
-        </span>
+        <el-button class="signOutElButton" type="text" @click="open2">
+          <span class="signOutButton">
+            <i class="fa fa-sign-out" aria-hidden="true"></i>
+            Sign Out
+          </span>
+        </el-button>
       </div>
     </el-menu>
     <div class="rightHeader">
@@ -62,7 +64,7 @@
         }
 
         // 判断缓存用户信息是否过期或存在
-        if (localStorage.getItem("userInfo")) {
+        if (localStorage.getItem("userInfo") != "undefined" && localStorage.getItem("userInfo") != null) {
           getUserInfoFromeLocalStorage();
           that.axios.post(host + "/query", datas)
             .then(res => {
@@ -71,7 +73,8 @@
                 getUserInfoFromeLocalStorage();
               }
             })
-        } else {
+        } else  {
+          console.log(2)
           that.axios.post(host + "/query", datas)
             .then(res => {
               localStorage.setItem("userInfo", JSON.stringify(res.data[0]))
@@ -88,11 +91,6 @@
       }
     },
     methods: {
-      //退出登录 清除token
-      signOut() {
-        localStorage.removeItem("token")
-        this.$router.replace("/")
-      },
       handleOpen(key, keyPath) {
         console.log(key, keyPath);
       },
@@ -101,6 +99,18 @@
       },
       handleSelect(key, keyPath) {
         this.menuIndex = key
+      },
+      open2() {
+        var that = this;
+        this.$confirm('是否继续退出账号?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+        }).then(() => {
+          //退出登录 清除token
+          localStorage.removeItem("token")
+          that.$router.replace("/")
+        }).catch(() => {      
+        });
       }
     }
 
@@ -185,5 +195,8 @@
   .el-menu-item.is-active {
     color: white;
     background: #595959 !important;
+  }
+  .signOutElButton {
+    width: 100%;
   }
 </style>
