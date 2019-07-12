@@ -72,7 +72,7 @@
               if(res.data) {
                 let token = res.data
                 // 存储cookie
-               localStorage.setItem("token", token);
+                localStorage.setItem("token", token);
                 that.alertShow = false;  
                 that.$router.replace("home")
               } else {

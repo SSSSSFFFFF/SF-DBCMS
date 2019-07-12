@@ -57,7 +57,7 @@ var apis = (db, buf, dbase, col, response, type) => {
             // 发送返回值
             buf.code = '201';
             buf.mean = '添加成功';
-            response.send(buf);
+            response.send(buf.data.data);
             db.close();
         });
     }

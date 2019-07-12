@@ -8,13 +8,13 @@
                 <el-button @click="downloadExcel"><i class="fa fa-file-excel-o" aria-hidden="true"></i> {{dao}}
                 </el-button>
             </div>
-            <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="1"
+            <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
                 :page-sizes="pageSizes" :page-size="10" layout="total, sizes, prev, pager, next, jumper"
                 :total="pageTotal">
             </el-pagination>
 
         </div>
-        <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" style="width: 100%"
+        <el-table  ref="multipleTable" :data="tableData" tooltip-effect="dark" style="width: 100%"
             @selection-change="handleSelectionChange">
             <el-table-column type="selection" width="55">
             </el-table-column>
@@ -72,9 +72,11 @@
                 dialogVisible: false,
                 form: {
                     name: '',
+                    headImg : '',
                 },
                 imageUrl: '',
                 imgFile : '',
+                currentPage:1,
             }
 
         },
@@ -90,8 +92,8 @@
                 this.imageUrl = URL.createObjectURL(file.raw);
             },
             beforeAvatarUpload(file) {
-                console.log(file.type)
-                const isJPG = file.type === 'image/jpeg' || 'image/png';
+                
+                const isJPG = file.type === 'image/jpeg' || file.type === 'image/jpeg';
                 const isLt2M = file.size / 1024 / 1024 < 2;
 
                 if (!isJPG) {
@@ -103,9 +105,8 @@
                 return isJPG && isLt2M;
             },
             confirmAddUser() {
+                let loadding = this.$loading()
                 var that = this;
-                this.dialogVisible = false;
-                console.log(that.form)
                 //下载头像到本地或服务器
                 // 创建一个FormData对象,用来组装一组用 XMLHttpRequest发送请求的键/值对
                 var fd = new FormData();
@@ -113,7 +114,30 @@
                 fd.append('file', that.imgFile);
                 that.axios.post(webHost + "/upload",fd)
                 .then(res => {
-                    console.log(res)
+                    that.form.headImg  = res.data.headImg
+                    let datas = {
+                        "dataBase": "SFCMS",
+                        "collectionName": "adminInfo",
+                        "data":[
+                                    that.form
+                        ],
+                        "token": localStorage.getItem("token")
+                    }
+                    that.axios.post(host+'/add',datas)
+                    .then(res => {
+                        console.log(res)
+                        loadding.close();
+                        that.tableData.push(that.form)
+                        that.dialogVisible = false;
+                        that.currentPage = that.pageTotal
+
+                    })
+                    .catch(err => {
+                        console.error(err); 
+                    })
+                    
+                    
+                    
                 })
                 .catch(err => {
                     console.error(err); 
@@ -128,13 +152,12 @@
             },
             query(page, pageSize) {
                 var that = this;
-                let token = localStorage.getItem("token");
                 let datas = {
                     "dataBase": "SFCMS",
                     "collectionName": "adminInfo",
                     "page": page,
                     "pageSize": pageSize,
-                    "token": token
+                    "token": localStorage.getItem("token")
                 }
                 that.axios.post(host + "/query", datas)
                     .then(res => {

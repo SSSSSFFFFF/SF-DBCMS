@@ -42,7 +42,9 @@ router.post('/', upload.single('file'), function (req: any, res: any, next: any)
     console.log('文件大小：%s', file.size);
     console.log('文件保存路径：%s', file.path);
     // 接收文件成功后返回数据给前端
-    res.json({ res_code: '0' });
+    res.json({
+        "headImg" : "http://139.196.102.62:8488/" + file.path
+    });
 });
 
 // 导出模块（在 app.js 中引入）
