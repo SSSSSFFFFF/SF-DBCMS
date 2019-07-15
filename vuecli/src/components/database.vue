@@ -15,7 +15,7 @@
 
         </div>
         <el-table  ref="multipleTable" :data="tableData" tooltip-effect="dark" style="width: 100%"
-            @selection-change="handleSelectionChange">
+            @selection-change="handleSelectionChange" @row-click="rowClick">
             <el-table-column type="selection" width="55">
             </el-table-column>
             <el-table-column prop="name" label="姓名" width="120">
@@ -25,6 +25,10 @@
                     <img :src="scope.row.headImg" width="40" height="40" class="head_pic" />
                 </template>
             </el-table-column>
+            <el-table-column  label="操作" width="120">
+                <el-button @click="editUserInfo" size="small">编辑</el-button>
+            </el-table-column>
+
         </el-table>
 
         <!-- 添加用户对话框 -->
@@ -77,6 +81,7 @@
                 imageUrl: '',
                 imgFile : '',
                 currentPage:1,
+                rowData : '',     
             }
 
         },
@@ -87,6 +92,12 @@
 
         },
         methods: {
+            editUserInfo(){
+                //改数据
+            },
+            rowClick(row, column, event){
+                this.rowData = row
+            },
             handleAvatarSuccess(res, file) {
                 this.imgFile = file.raw
                 this.imageUrl = URL.createObjectURL(file.raw);

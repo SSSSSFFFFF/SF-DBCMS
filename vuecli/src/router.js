@@ -12,11 +12,6 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'login',
-      component: Login
-    },
-    {
-      path: '/home',
       name: 'home',
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
@@ -25,6 +20,12 @@ export default new Router({
       // function () { 
       //   return import( /* webpackChunkName: "login" */ './views/Login.vue')
       // }
-    }
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: Login
+    },
+    
   ]
 })

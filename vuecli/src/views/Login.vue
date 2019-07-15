@@ -74,7 +74,7 @@
                 // 存储cookie
                 localStorage.setItem("token", token);
                 that.alertShow = false;  
-                that.$router.replace("home")
+                that.$router.replace("/")
               } else {
                 that.alertShow = true;
               }

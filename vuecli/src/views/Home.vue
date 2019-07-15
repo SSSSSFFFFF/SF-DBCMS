@@ -52,7 +52,7 @@
       var that = this;
       // 判断是否有token
       if (!localStorage.getItem("token")) {
-        that.$router.replace("/")
+        that.$router.replace("login")
       } else {
         let datas = {
           "dataBase": "SFCMS",
@@ -108,7 +108,7 @@
         }).then(() => {
           //退出登录 清除token
           localStorage.removeItem("token")
-          that.$router.replace("/")
+          that.$router.replace("login")
         }).catch(() => {      
         });
       }
