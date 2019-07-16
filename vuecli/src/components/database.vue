@@ -3,19 +3,19 @@
         <a href="" download="后台管理员.xlsx" id="hf"></a>
         <div class="block">
             <div class="right">
-                <el-button @click="dialogVisible = true"><i class="fa fa-user-plus" aria-hidden="true"></i> 添加用户
+                <el-button @click="addUser"><i class="fa fa-user-plus" aria-hidden="true"></i> 添加用户
                 </el-button>
                 <el-button @click="downloadExcel"><i class="fa fa-file-excel-o" aria-hidden="true"></i> {{dao}}
                 </el-button>
             </div>
-            <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
-                :page-sizes="pageSizes" :page-size="10" layout="total, sizes, prev, pager, next, jumper"
-                :total="pageTotal">
+            <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
+                :current-page="currentPage" :page-sizes="pageSizes" :page-size="10"
+                layout="total, sizes, prev, pager, next, jumper" :total="pageTotal">
             </el-pagination>
 
         </div>
-        <el-table  ref="multipleTable" :data="tableData" tooltip-effect="dark" style="width: 100%"
-            @selection-change="handleSelectionChange" @row-click="rowClick">
+        <el-table ref="multipleTable" :data="tableData" tooltip-effect="dark" style="width: 100%"
+            @selection-change="handleSelectionChange" >
             <el-table-column type="selection" width="55">
             </el-table-column>
             <el-table-column prop="name" label="姓名" width="120">
@@ -25,14 +25,16 @@
                     <img :src="scope.row.headImg" width="40" height="40" class="head_pic" />
                 </template>
             </el-table-column>
-            <el-table-column  label="操作" width="120">
-                <el-button @click="editUserInfo" size="small">编辑</el-button>
+            <el-table-column fixed="right" label="操作" width="100">
+                <template slot-scope="scope">
+                    <el-button @click="rowClick(scope.row)" size="small">编辑</el-button>
+                </template>
             </el-table-column>
 
         </el-table>
 
         <!-- 添加用户对话框 -->
-        <el-dialog title="添加用户" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
+        <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
             <el-form ref="form" :model="form" label-width="80px" label-position="left">
                 <el-form-item label="用户名">
                     <el-input class="userInput" v-model="form.name"></el-input>
@@ -76,12 +78,13 @@
                 dialogVisible: false,
                 form: {
                     name: '',
-                    headImg : '',
+                    headImg: '',
                 },
                 imageUrl: '',
-                imgFile : '',
-                currentPage:1,
-                rowData : '',     
+                imgFile: '',
+                currentPage: 1,
+                rowData: '',
+                dialogTitle:"",
             }
 
         },
@@ -92,18 +95,26 @@
 
         },
         methods: {
-            editUserInfo(){
+            addUser(){
+                this.dialogTitle = '添加用户';
+                this.dialogVisible = true;
+            },
+            editUserInfo() {
                 //改数据
             },
-            rowClick(row, column, event){
+            rowClick(row) {
+                this.dialogTitle = '编辑用户'
                 this.rowData = row
+                this.dialogVisible = true;
+                this.form.name = row.name;
+                this.imageUrl = row.headImg;
             },
             handleAvatarSuccess(res, file) {
                 this.imgFile = file.raw
                 this.imageUrl = URL.createObjectURL(file.raw);
             },
             beforeAvatarUpload(file) {
-                
+
                 const isJPG = file.type === 'image/jpeg' || file.type === 'image/jpeg';
                 const isLt2M = file.size / 1024 / 1024 < 2;
 
@@ -123,36 +134,36 @@
                 var fd = new FormData();
                 // 把 input 标签获取的文件加入 FromData 中
                 fd.append('file', that.imgFile);
-                that.axios.post(webHost + "/upload",fd)
-                .then(res => {
-                    that.form.headImg  = res.data.headImg
-                    let datas = {
-                        "dataBase": "SFCMS",
-                        "collectionName": "adminInfo",
-                        "data":[
-                                    that.form
-                        ],
-                        "token": localStorage.getItem("token")
-                    }
-                    that.axios.post(host+'/add',datas)
+                that.axios.post(webHost + "/upload", fd)
                     .then(res => {
-                        console.log(res)
-                        loadding.close();
-                        that.tableData.push(that.form)
-                        that.dialogVisible = false;
-                        that.currentPage = that.pageTotal
+                        that.form.headImg = res.data.headImg
+                        let datas = {
+                            "dataBase": "SFCMS",
+                            "collectionName": "adminInfo",
+                            "data": [
+                                that.form
+                            ],
+                            "token": localStorage.getItem("token")
+                        }
+                        that.axios.post(host + '/add', datas)
+                            .then(res => {
+                                console.log(res)
+                                loadding.close();
+                                that.tableData.push(that.form)
+                                that.dialogVisible = false;
+                                that.currentPage = that.pageTotal
+
+                            })
+                            .catch(err => {
+                                console.error(err);
+                            })
+
+
 
                     })
                     .catch(err => {
-                        console.error(err); 
+                        console.error(err);
                     })
-                    
-                    
-                    
-                })
-                .catch(err => {
-                    console.error(err); 
-                })
             },
             downloadExcel() {
                 if (this.multipleSelection.length > 0) {
@@ -264,10 +275,10 @@
         height: 178px;
         display: block;
     }
+
     .plusCenter {
-        display: flex!important;
+        display: flex !important;
         align-items: center;
         justify-content: center;
     }
-    
 </style>
